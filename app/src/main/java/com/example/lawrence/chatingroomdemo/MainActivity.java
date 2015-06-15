@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.ListView;
 
-import com.example.lawrence.chatingroomdemo.message_adapter.Message;
+import com.example.lawrence.chatingroomdemo.message_adapter.ChatMessage;
 import com.example.lawrence.chatingroomdemo.message_adapter.MessageAdapter;
 import com.example.lawrence.chatingroomdemo.message_adapter.MessageReceiverInterface;
 import com.example.lawrence.chatingroomdemo.messaging_agent.TuringRequestAgent;
@@ -16,15 +16,10 @@ import java.util.List;
 public class MainActivity extends Activity
         implements MessageReceiverInterface, TuringResponseInterface {
 
-    private ListView chattingMessageListView;
-
-    private MessageAdapter messageListViewAdapter;
-
-    private SendMessageView sendMessageView;
-
-    private List<Message> dataList;
-
-    private boolean toogle;
+    private ListView mChattingMessageListView;
+    private MessageAdapter mMessageListViewAdapter;
+    private SendMessageView mSendMessageView;
+    private List<ChatMessage> mDataList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,19 +30,19 @@ public class MainActivity extends Activity
     }
 
     private void initDataSource() {
-        dataList = new ArrayList<>();
+        mDataList = new ArrayList<>();
         TuringRequestAgent.getInstance().registerResponseHandler(MainActivity.this);
     }
 
     private void initWidgetForActivity() {
 
-        chattingMessageListView = (ListView) findViewById(R.id.chatting_message_listview);
-        messageListViewAdapter = new MessageAdapter(MainActivity.this, R.layout.message_items_layout, dataList);
-        chattingMessageListView.setAdapter(messageListViewAdapter);
+        mChattingMessageListView = (ListView) findViewById(R.id.chatting_message_listview);
+        mMessageListViewAdapter = new MessageAdapter(MainActivity.this, R.layout.message_items_layout, mDataList);
+        mChattingMessageListView.setAdapter(mMessageListViewAdapter);
 
-        sendMessageView = (SendMessageView) findViewById(R.id.chatting_sendmessage_view);
+        mSendMessageView = (SendMessageView) findViewById(R.id.chatting_sendmessage_view);
         findViewById(R.id.chatting_sendmessage_view);
-        sendMessageView.setMessageInterface(this);
+        mSendMessageView.setMessageInterface(this);
     }
 
     /*  Implement methods for Interface */
@@ -56,14 +51,14 @@ public class MainActivity extends Activity
     public void sendMessage(String content) {
         // more content checking for valid content format
         if (content.length() > 0) {
-            Message newMessage = new Message(content, Message.MessageType.TYPE_SENT);
-            messageListViewAdapter.add(newMessage);
+            ChatMessage newChatMessage = new ChatMessage(content, ChatMessage.Type.TYPE_SENT);
+            mMessageListViewAdapter.add(newChatMessage);
             // jump to lateset message textview
-            chattingMessageListView.setSelection(dataList.size());
+            mChattingMessageListView.setSelection(mDataList.size());
             // send message
-            TuringRequestAgent.getInstance().postMessage(newMessage);
+            TuringRequestAgent.getInstance().postMessage(newChatMessage);
             // clear input textfield
-            sendMessageView.clear();
+            mSendMessageView.clear();
         }
 
     }
@@ -71,10 +66,10 @@ public class MainActivity extends Activity
     // receive sent message content
     // TODO: combine with void sendMessage()
     @Override
-    public void returnResponseData(Message responseMessage) {
+    public void returnResponseData(ChatMessage responseChatMessage) {
 
-        messageListViewAdapter.add(responseMessage);
+        mMessageListViewAdapter.add(responseChatMessage);
         // jump to lateset message textview
-        chattingMessageListView.setSelection(dataList.size());
+        mChattingMessageListView.setSelection(mDataList.size());
     }
 }

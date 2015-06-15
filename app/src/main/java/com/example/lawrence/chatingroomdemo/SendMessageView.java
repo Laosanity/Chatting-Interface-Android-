@@ -16,30 +16,30 @@ import com.example.lawrence.chatingroomdemo.message_adapter.MessageReceiverInter
 
 public class SendMessageView extends LinearLayout {
 
-    MessageReceiverInterface messageInterface;
-    EditText editText;
-    Button sendButton;
+    private MessageReceiverInterface mMessageInterface;
+    private EditText mEditText;
+    private Button mSendButton;
 
-    public void setMessageInterface(MessageReceiverInterface implementClass){
-        this.messageInterface = implementClass;
+    public void setMessageInterface(MessageReceiverInterface implementClass) {
+        mMessageInterface = implementClass;
     }
 
-    public SendMessageView(Context context, AttributeSet attrs){
+    public SendMessageView(Context context, AttributeSet attrs) {
 
         super(context, attrs);
 
         LayoutInflater.from(context).inflate(R.layout.chatting_input_view, this);
 
-        editText = (EditText) findViewById(R.id.chatting_input_textview);
-        sendButton = (Button) findViewById(R.id.chatting_send_button);
+        mEditText = (EditText) findViewById(R.id.chatting_input_textview);
+        mSendButton = (Button) findViewById(R.id.chatting_send_button);
 
-        sendButton.setOnClickListener(new OnClickListener() {
+        mSendButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 // send out inputted message
                 // may use try-catch later
-                if(messageInterface != null) {
-                    messageInterface.sendMessage(editText.getText().toString());
+                if (mMessageInterface != null) {
+                    mMessageInterface.sendMessage(mEditText.getText().toString());
                 }
             }
         });
@@ -47,7 +47,7 @@ public class SendMessageView extends LinearLayout {
     }
 
     // clear content in input textfield
-    public void clear(){
-        editText.setText("");
+    public void clear() {
+        mEditText.setText("");
     }
 }

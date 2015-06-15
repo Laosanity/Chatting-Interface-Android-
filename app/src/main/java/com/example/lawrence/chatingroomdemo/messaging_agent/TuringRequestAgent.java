@@ -3,7 +3,7 @@ package com.example.lawrence.chatingroomdemo.messaging_agent;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.lawrence.chatingroomdemo.message_adapter.Message;
+import com.example.lawrence.chatingroomdemo.message_adapter.ChatMessage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,51 +56,48 @@ public class TuringRequestAgent {
     private final static String USER_ID = "97175";
     private final static String API_KEY = "a431488cc222ef5c05d0e5203d632452";
 
-    private static TuringRequestAgent ourInstance = null;
-    private static TuringResponseInterface responseInterface = null;
-
-    private String baseUrlString;
+    private static TuringRequestAgent sOurInstance = null;
+    private TuringResponseInterface mResponseInterface = null;
+    private String mBaseUrlString;
 
     public static TuringRequestAgent getInstance() {
-
         // lazy load
-        if (ourInstance == null) {
+        if (sOurInstance == null) {
             // thread safe
             // Actually we can initiate it once this static class is loaded without lazy loading.
             synchronized (TuringRequestAgent.class) {
-                ourInstance = new TuringRequestAgent();
+                sOurInstance = new TuringRequestAgent();
             }
         }
-        return ourInstance;
+        return sOurInstance;
     }
 
     private TuringRequestAgent() {
-
-        baseUrlString = REQUEST_URL.replaceAll("_KEY", API_KEY);
-        baseUrlString = baseUrlString.replaceAll("_USER_ID", USER_ID);
+        mBaseUrlString = REQUEST_URL.replaceAll("_KEY", API_KEY);
+        mBaseUrlString = mBaseUrlString.replaceAll("_USER_ID", USER_ID);
     }
 
     public void registerResponseHandler(TuringResponseInterface implementedInterface) {
-        responseInterface = implementedInterface;
+        mResponseInterface = implementedInterface;
     }
 
-    public void postMessage(Message message) {
+    public void postMessage(ChatMessage chatMessage) {
 
-        RequestData requestData = new RequestData(message);
+        RequestData requestData = new RequestData(chatMessage);
         // create a async task
-        PostMessageTask newTask = new PostMessageTask(baseUrlString, responseInterface);
+        PostMessageTask newTask = new PostMessageTask(mBaseUrlString, mResponseInterface);
         newTask.execute(requestData);
     }
 }
 
 class PostMessageTask extends AsyncTask<RequestData, Void, ResponseData> {
 
-    String baseUrlString;
-    TuringResponseInterface responseInterface = null;
+    private String mBaseUrlString;
+    private TuringResponseInterface mResponseInterface = null;
 
     public PostMessageTask(String baseUrl, TuringResponseInterface implementedInterface) {
-        baseUrlString = baseUrl;
-        responseInterface = implementedInterface;
+        mBaseUrlString = baseUrl;
+        mResponseInterface = implementedInterface;
     }
 
     // on excuting thread
@@ -111,7 +108,7 @@ class PostMessageTask extends AsyncTask<RequestData, Void, ResponseData> {
             RequestData requestData = params[0];
             String messageContent = requestData.getRequestText();
             String encodedPara = URLEncoder.encode(messageContent, "UTF-8");
-            String requestUrlString = baseUrlString.replaceAll("_INFO", encodedPara);
+            String requestUrlString = mBaseUrlString.replaceAll("_INFO", encodedPara);
             Log.d("Request URL ", requestUrlString);
             return postRequest(requestUrlString);
 
@@ -124,10 +121,10 @@ class PostMessageTask extends AsyncTask<RequestData, Void, ResponseData> {
     @Override
     protected void onPostExecute(ResponseData result) {
         // back to main thread, callback
-        if (responseInterface != null && result != null) {
+        if (mResponseInterface != null && result != null) {
 
-            Message responseMessage = new Message(result);
-            responseInterface.returnResponseData(responseMessage);
+            ChatMessage responseChatMessage = new ChatMessage(result);
+            mResponseInterface.returnResponseData(responseChatMessage);
         }
 
     }

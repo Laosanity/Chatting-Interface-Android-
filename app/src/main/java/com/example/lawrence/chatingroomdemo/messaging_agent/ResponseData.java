@@ -10,21 +10,21 @@ import org.json.JSONObject;
  */
 public class ResponseData {
 
-    protected int responseCode;
-    protected String responseText;
+    protected int mResponseCode;
+    protected String mResponseText;
 
     public ResponseData(JSONObject responseJsonData) {
 
         try {
-            responseCode = responseJsonData.getInt("code");
-            responseText = responseJsonData.getString("text");
+            mResponseCode = responseJsonData.getInt("code");
+            mResponseText = responseJsonData.getString("text");
 //        String responseUrl = responseJsonData.getString("url");
 //        JSONArray responseListContent = responseJsonData.getJSONArray("list");
 
-            Log.d("Response Code ", String.valueOf(responseCode));
-            Log.d("Response Text", responseText);
+            Log.d("Response Code ", String.valueOf(mResponseCode));
+            Log.d("Response Text", mResponseText);
 //        Log.d("Response Url", responseUrl);
-//        Log.d("Response List", responseText);
+//        Log.d("Response List", mResponseText);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -32,6 +32,6 @@ public class ResponseData {
     }
 
     public String getResponseText() {
-        return responseText;
+        return mResponseText;
     }
 }
