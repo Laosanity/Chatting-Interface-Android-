@@ -20,10 +20,6 @@ public class SendMessageView extends LinearLayout {
     private EditText mEditText;
     private Button mSendButton;
 
-    public void setMessageInterface(MessageReceiverInterface implementClass) {
-        mMessageInterface = implementClass;
-    }
-
     public SendMessageView(Context context, AttributeSet attrs) {
 
         super(context, attrs);
@@ -44,6 +40,10 @@ public class SendMessageView extends LinearLayout {
             }
         });
 
+    }
+
+    public void setMessageInterface(MessageReceiverInterface implementClass) {
+        mMessageInterface = implementClass;
     }
 
     // clear content in input textfield

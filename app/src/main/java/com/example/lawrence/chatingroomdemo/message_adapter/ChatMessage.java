@@ -11,8 +11,8 @@ public class ChatMessage {
     private Type mType;
     private State mState;
 
-    public enum Type { TYPE_RECEIVED, TYPE_SENT; }
-    public enum State { STATE_NEW, STATE_STORE; }
+    public enum Type { TYPE_RECEIVED, TYPE_SENT }
+    public enum State { STATE_NEW, STATE_STORE }
 
     public ChatMessage(String content, Type type) {
         mContent = content;

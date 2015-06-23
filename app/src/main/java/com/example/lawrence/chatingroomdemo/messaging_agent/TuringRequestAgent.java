@@ -34,6 +34,7 @@ import java.net.URLEncoder;
 
 /*
 *  TODO: Remember to check http connection state before you post any request
+*  TODO: More error handles for http connection.
 *
 * */
 
@@ -60,6 +61,11 @@ public class TuringRequestAgent {
     private TuringResponseInterface mResponseInterface = null;
     private String mBaseUrlString;
 
+    private TuringRequestAgent() {
+        mBaseUrlString = REQUEST_URL.replaceAll("_KEY", API_KEY);
+        mBaseUrlString = mBaseUrlString.replaceAll("_USER_ID", USER_ID);
+    }
+
     public static TuringRequestAgent getInstance() {
         // lazy load
         if (sOurInstance == null) {
@@ -70,11 +76,6 @@ public class TuringRequestAgent {
             }
         }
         return sOurInstance;
-    }
-
-    private TuringRequestAgent() {
-        mBaseUrlString = REQUEST_URL.replaceAll("_KEY", API_KEY);
-        mBaseUrlString = mBaseUrlString.replaceAll("_USER_ID", USER_ID);
     }
 
     public void registerResponseHandler(TuringResponseInterface implementedInterface) {
